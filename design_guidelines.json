@@ -1,0 +1,122 @@
+{
+  "project_name": "ArchHub",
+  "design_philosophy": {
+    "identity": "The Modern Terminal",
+    "core_principles": [
+      "Precision over Decoration: Every pixel has a purpose.",
+      "Terminal Aesthetic, Modern UX: Monospace for data, Sans for readability.",
+      "Community First: Content is the hero.",
+      "Arch Way: Simplicity, Modernity, Pragmatism."
+    ],
+    "mood": "Technical, Clean, Empowering, Direct",
+    "visual_hierarchy": "Content > Metadata > Navigation"
+  },
+  "typography": {
+    "font_family": {
+      "ui": "Inter, sans-serif",
+      "code": "'JetBrains Mono', monospace",
+      "display": "Inter, sans-serif"
+    },
+    "usage_rules": [
+      "Headings (H1-H3): Inter, weight 800 (ExtraBold), tracking-tighter (-0.02em).",
+      "Body Text: Inter, weight 400 (Regular), leading-relaxed.",
+      "Metadata (Dates, Authors, Tags): JetBrains Mono, weight 500, text-xs or text-sm, tracking-wide.",
+      "Code Blocks: JetBrains Mono, weight 400.",
+      "Navigation: JetBrains Mono or Inter (depending on desired density), uppercase for labels."
+    ],
+    "scale": {
+      "h1": "text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter",
+      "h2": "text-3xl md:text-4xl font-bold tracking-tight",
+      "h3": "text-2xl font-bold tracking-tight",
+      "body": "text-base leading-7 text-muted-foreground",
+      "caption": "text-sm text-muted-foreground font-mono"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": "#1793D1",
+      "primary_dark": "#126A9A",
+      "background_dark": "#1A1A2E",
+      "surface_dark": "#252540",
+      "background_light": "#FFFFFF",
+      "surface_light": "#F8F9FA",
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "danger": "#EF4444",
+      "text_main_dark": "#FFFFFF",
+      "text_muted_dark": "#A1A1AA",
+      "text_main_light": "#0F172A",
+      "text_muted_light": "#64748B"
+    },
+    "usage": {
+      "primary_action": "bg-[#1793D1] hover:bg-[#126A9A] text-white",
+      "surface_card": "dark:bg-[#1A1A2E] bg-white border dark:border-white/10 border-black/10",
+      "link": "text-[#1793D1] hover:underline underline-offset-4"
+    },
+    "dark_mode_strategy": "Default is Dark. Use 'class' strategy in Tailwind. Ensure dark: classes are primary."
+  },
+  "layout_grids": {
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+    "article_list": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+    "article_detail": "max-w-3xl mx-auto",
+    "bento_grid": "grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[minmax(180px,auto)]"
+  },
+  "components": {
+    "buttons": {
+      "style": "rounded-sm font-medium transition-all duration-200 active:scale-95",
+      "variants": {
+        "default": "bg-[#1793D1] text-white hover:bg-[#126A9A] shadow-sm",
+        "outline": "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+        "ghost": "hover:bg-accent hover:text-accent-foreground",
+        "terminal": "font-mono border border-[#1793D1] text-[#1793D1] hover:bg-[#1793D1]/10 bg-transparent"
+      }
+    },
+    "cards": {
+      "style": "rounded-lg border bg-card text-card-foreground shadow-sm",
+      "hover": "hover:border-[#1793D1]/50 transition-colors duration-300"
+    },
+    "inputs": {
+      "style": "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    }
+  },
+  "visual_enhancers": {
+    "borders": "1px solid. Use opacity for subtlety (border-white/10 in dark mode).",
+    "shadows": "None or very subtle (shadow-sm) in dark mode. Sharp shadows in light mode.",
+    "glassmorphism": "backdrop-blur-md bg-background/80 border-b border-border/40 sticky top-0 z-50",
+    "terminal_decor": "Use '>_' or '$' prefixes in purely decorative elements (not actual content) to evoke terminal feel."
+  },
+  "motion": {
+    "duration": "duration-200",
+    "easing": "ease-out",
+    "hover_effects": "translate-y-[-2px] for cards, scale-[1.02] for distinct items.",
+    "page_transition": "opacity-0 to opacity-100 duration-300"
+  },
+  "images": {
+    "style": "Abstract, Geometric, Blue-toned, Architectural. No stock people photos.",
+    "hero_background": "https://images.unsplash.com/photo-1564772255985-c7ca28689bae",
+    "feature_card_bg": "https://images.unsplash.com/photo-1598737652470-59ef13fa352c",
+    "auth_background": "https://images.unsplash.com/photo-1732511821776-14d2274e5b8c"
+  },
+  "accessibility": {
+    "contrast": "Ensure text is at least 4.5:1 against background. Check #1793D1 against white (might need darker shade for text).",
+    "focus_states": "Visible focus ring (ring-2 ring-offset-2 ring-[#1793D1]).",
+    "aria": "Use accessible names for icon-only buttons."
+  },
+  "libraries": {
+    "icons": "lucide-react (default)",
+    "markdown": "react-markdown",
+    "syntax_highlight": "react-syntax-highlighter (atom-one-dark theme)",
+    "date_handling": "date-fns",
+    "toast": "sonner"
+  },
+  "universal_guidelines": [
+    "DO NOT use gradients on the primary blue. Keep it flat.",
+    "DO NOT use rounded-xl or rounded-2xl. Stick to rounded-sm, rounded-md, or rounded-lg (max).",
+    "Use JetBrains Mono for 'meta' information (Usernames, Dates, Tags).",
+    "Use Inter for long-form reading (Articles, Tutorials).",
+    "Dark Mode is the default. Design for Dark Mode first.",
+    "Respect the 'Arch' aesthetic: Minimal, Functional, Fast.",
+    "Use data-testid attributes for testing."
+  ],
+  "instructions_to_main_agent": "You are building a React application using JS (not TS). Ensure all components are .js or .jsx. Use the provided colors in tailwind.config.js. Implement the 'Arch' aesthetic by using the specific font pairings (Inter/Mono) and strict border/color usage defined above."
+}
