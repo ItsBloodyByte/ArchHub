@@ -310,7 +310,7 @@ Alle Endpunkte unter `/api`. Auth via `Authorization: Bearer <token>`.
 
 ## Mitwirken
 
-Beiträge sind willkommen! Siehe [Contributors-Seite](https://archhub.example.com/contributors).
+Beiträge sind willkommen! Siehe [Contributors-Seite](https://archhub.dev/contributors).
 
 1. **Fork** das Repository
 2. **Feature-Branch** erstellen: `git checkout -b feature/mein-feature`
