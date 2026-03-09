@@ -8,9 +8,15 @@ ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # JWT
-JWT_SECRET = os.environ.get('JWT_SECRET', 'archhub_default_secret')
+JWT_SECRET = os.environ.get('JWT_SECRET', '')
 JWT_ALGORITHM = os.environ.get('JWT_ALGORITHM', 'HS256')
 JWT_EXPIRY_MINUTES = int(os.environ.get('JWT_EXPIRY_MINUTES', '1440'))
+
+if not JWT_SECRET or len(JWT_SECRET) < 32:
+    raise RuntimeError(
+        "JWT_SECRET fehlt oder zu kurz (min. 32 Zeichen). "
+        "Generiere einen mit: openssl rand -base64 48"
+    )
 
 # Anti-Bot Rate Limiting (in-memory)
 registration_attempts = defaultdict(list)  # ip -> [timestamps]
