@@ -25,6 +25,24 @@ from config import (
 
 router = APIRouter()
 
+# [FIX] Rate Limiting für Login (neu)
+from collections import defaultdict
+login_attempts: dict = defaultdict(list)
+LOGIN_RATE_LIMIT = 5       # max. 5 Versuche
+LOGIN_RATE_WINDOW = 300    # pro 5 Minuten
+
+
+def _check_login_rate(ip: str):
+    """Wirft 429 wenn zu viele Login-Versuche von einer IP."""
+    now = time.time()
+    login_attempts[ip] = [t for t in login_attempts[ip] if now - t < LOGIN_RATE_WINDOW]
+    if len(login_attempts[ip]) >= LOGIN_RATE_LIMIT:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many login attempts. Try again in 5 minutes."
+        )
+    login_attempts[ip].append(now)
+
 
 @router.post("/auth/register")
 async def register(data: UserRegister, request: Request):
@@ -100,9 +118,17 @@ async def register(data: UserRegister, request: Request):
 
 @router.post("/auth/login")
 async def login(data: UserLogin, request: Request):
+    # [FIX] Rate Limiting vor jedem DB-Zugriff prüfen
+    client_ip = request.client.host if request.client else "unknown"
+    _check_login_rate(client_ip)
+
     user = await db.users.find_one({"username_lower": data.username.lower().strip()}, {"_id": 0})
     if not user or not verify_password(data.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    # [FIX] Bei erfolgreichem Login Zähler zurücksetzen
+    login_attempts[client_ip] = []
+
     if user.get("totp_enabled"):
         if not data.totp_code:
             return {"requires_2fa": True}
@@ -119,7 +145,7 @@ async def login(data: UserLogin, request: Request):
         "id": session_id,
         "user_id": user["id"],
         "user_agent": ua[:256],
-        "ip": request.client.host if request.client else "unknown",
+        "ip": client_ip,
         "created_at": now,
         "last_active": now,
         "revoked": False
