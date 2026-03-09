@@ -1,19 +1,26 @@
 version: "3.8"
 
 services:
+
   mongodb:
     image: mongo:7
     container_name: archhub-db
     restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME:-archhub}
     volumes:
-      - archhub_mongo_data:/data/db
-    ports:
-      - "127.0.0.1:27017:27017"
+      - ./db_data:/data/db
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--username", "${MONGO_USER}",
+             "--password", "${MONGO_PASSWORD}", "--authenticationDatabase",
+             "admin", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - internal
 
   backend:
     build:
@@ -27,26 +34,34 @@ services:
     env_file:
       - .env
     environment:
-      - MONGO_URL=mongodb://mongodb:27017
+      - MONGO_URL=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/${DB_NAME:-archhub}?authSource=admin
       - DB_NAME=${DB_NAME:-archhub}
     volumes:
-      - archhub_uploads:/app/uploads
+      - ./uploads:/app/uploads
     ports:
-      - "127.0.0.1:8001:8001"
+      - "localhost:8091:8001"
+    networks:
+      - internal
+      - external
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
       args:
-        REACT_APP_BACKEND_URL: ${REACT_APP_BACKEND_URL:-}
+        REACT_APP_BACKEND_URL: https://api.archhub.dev
     container_name: archhub-frontend
     restart: unless-stopped
     depends_on:
       - backend
     ports:
-      - "${PORT:-80}:80"
+      - "localhost:8080:80"
+    networks:
+      - external
 
-volumes:
-  archhub_mongo_data:
-  archhub_uploads:
+networks:
+  internal:
+    driver: bridge
+    internal: true
+  external:
+    driver: bridge
